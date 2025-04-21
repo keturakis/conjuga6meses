@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Portuguese Daily Verb Master</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🇵🇹</text></svg>">
+    <style>
+        :root {
+            --primary: #3563db;
+            --primary-dark: #2851c9;
+            --primary-light: #e6f0ff;
+            --secondary: #8c62f5;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --radius-sm: 0.125rem;
+            --radius: 0.25rem;
+            --radius-md: 0.375rem;
+            --radius-lg: 0.5rem;
+            --radius-xl: 0.75rem;
+            --radius-2xl: 1rem;
+            --radius-3xl: 1.5rem;
+            --radius-full: 9999px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: var(--gray-800);
+            line-height: 1.5;
+            padding-bottom: 40px;
+        }
+
+        .app-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        /* Header and Navigation */
+        .app-header {
+            background-color: var(--primary);
+            color: white;
+            padding: 16px;
+            border-radius: var(--radius-xl);
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .app-title {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .progress-indicator {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 4px 10px;
+            border-radius: var(--radius-full);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .nav-tabs {
+            display: flex;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-lg);
+            padding: 4px;
+        }
+
+        .nav-tab {
+            flex: 1;
+            text-align: center;
+            padding: 8px 12px;
+            border-radius: var(--radius-md);
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .nav-tab.active {
+            background-color: white;
+            color: var(--primary);
+        }
+
+        /* Calendar View */
+        .calendar-container {
+            margin-bottom: 20px;
+        }
+
+        .month-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .month-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        .month-nav {
+            display: flex;
+            gap: 16px;
+        }
+
+        .month-nav-button {
+            background: none;
+            border: none;
+            padding: 4px 8px;
+            cursor: pointer;
+            color: var(--gray-500);
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            transition: color 0.2s ease;
+        }
+
+        .month-nav-button:hover {
+            color: var(--primary);
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+        }
+
+        .calendar-day-header {
+            text-align: center;
+            font-weight: 500;
+            color: var(--gray-500);
+            font-size: 12px;
+            padding: 4px 0;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1 / 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            position: relative;
+            border: 1px solid var(--gray-200);
+            background-color: white;
+            transition: all 0.2s ease;
+        }
+
+        .calendar-day.empty {
+            border: none;
+            background: none;
+        }
+
+        .calendar-day.today {
+            border-color: var(--primary);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .calendar-day.completed {
+            background-color: var(--primary-light);
+            border-color: var(--primary-light);
+        }
+
+        .calendar-day.active {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+
+        .calendar-day:not(.empty):hover {
+            border-color: var(--primary);
+        }
+
+        .calendar-day .completion-dot {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background-color: var(--success);
+            border-radius: 50%;
+            bottom: 4px;
+        }
+
+        /* Cards */
+        .card {
+            background-color: white;
+            border-radius: var(--radius-2xl);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .card-subtitle {
+            color: var(--gray-600);
+            margin-bottom: 16px;
+        }
+
+        /* Learn Tab */
+        .verb-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .verb-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--gray-800);
+        }
+
+        .verb-info {
+            color: var(--gray-600);
+            font-size: 16px;
+        }
+
+        .verb-type-badge {
+            padding: 4px 10px;
+            border-radius: var(--radius-full);
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .verb-type-regular {
+            background-color: #d1fae5;
+            color: #047857;
+        }
+
+        .verb-type-irregular {
+            background-color: #e0e7ff;
+            color: #4338ca;
+        }
+
+        .conjugation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .conjugation-table {
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 1px solid var(--gray-200);
+        }
+
+        .conjugation-header {
+            padding: 10px;
+            font-weight: 600;
+            text-align: center;
+            color: white;
+        }
+
+        .present-tense .conjugation-header {
+            background-color: var(--primary);
+        }
+
+        .past-tense .conjugation-header {
+            background-color: var(--secondary);
+        }
+
+        .future-tense .conjugation-header {
+            background-color: var(--success);
+        }
+
+        .conjugation-body {
+            padding: 0;
+        }
+
+        .conjugation-row {
+            display: flex;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .conjugation-row:last-child {
+            border-bottom: none;
+        }
+
+        .conjugation-subject {
+            width: 40%;
+            padding: 8px 12px;
+            background-color: var(--gray-50);
+            font-weight: 500;
+            color: var(--gray-700);
+            font-size: 14px;
+        }
+
+        .conjugation-verb {
+            width: 60%;
+            padding: 8px 12px;
+            font-size: 14px;
+        }
+
+        .examples-container {
+            margin-top: 20px;
+        }
+
+        .examples-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--gray-800);
+        }
+
+        .example-item {
+            padding: 8px 0;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .example-item:last-child {
+            border-bottom: none;
+        }
+
+        .example-portuguese {
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .example-english {
+            font-size: 14px;
+            color: var(--gray-600);
+        }
+
+        /* Practice Tab */
+        .practice-card {
+            position: relative;
+        }
+
+        .progress-container {
+            height: 6px;
+            background-color: var(--gray-200);
+            border-radius: var(--radius-full);
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--primary);
+            border-radius: var(--radius-full);
+            transition: width 0.3s ease;
+        }
+
+        .question-count {
+            font-size: 14px;
+            color: var(--gray-500);
+            margin-bottom: 6px;
+        }
+
+        .question-prompt {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .answer-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--gray-300);
+            border-radius: var(--radius-lg);
+            font-size: 16px;
+            margin-bottom: 16px;
+            transition: border-color 0.2s ease;
+        }
+
+        .answer-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .feedback {
+            padding: 12px 16px;
+            border-radius: var(--radius-lg);
+            margin-bottom: 16px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .feedback-correct {
+            background-color: #ecfdf5;
+            color: #065f46;
+        }
+
+        .feedback-incorrect {
+            background-color: #fef2f2;
+            color: #b91c1c;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .button {
+            padding: 12px 20px;
+            border-radius: var(--radius-lg);
+            font-weight: 500;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .primary-button {
+            background-color: var(--primary);
+            color: white;
+            flex: 2;
+        }
+
+        .primary-button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .primary-button:disabled {
+            background-color: var(--gray-300);
+            cursor: not-allowed;
+        }
+
+        .secondary-button {
+            background-color: var(--gray-100);
+            color: var(--gray-700);
+            flex: 1;
+        }
+
+        .secondary-button:hover {
+            background-color: var(--gray-200);
+        }
+
+        .results-container {
+            text-align: center;
+            padding: 24px 0;
+        }
+
+        .results-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--primary);
+        }
+
+        .results-score {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .results-feedback {
+            margin-bottom: 24px;
+        }
+
+        /* Review Tab */
+        .filter-bar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+        }
+
+        .filter-button {
+            padding: 6px 12px;
+            border-radius: var(--radius-full);
+            font-size: 14px;
+            font-weight: 500;
+            border: 1px solid var(--gray-200);
+            background-color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .filter-button.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .verb-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .verb-card {
+            background-color: white;
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--gray-200);
+            transition: transform 0.2s ease;
+        }
+
+        .verb-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .verb-card-header {
+            padding: 10px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .verb-card-regular .verb-card-header {
+            background-color: #d1fae5;
+            color: #047857;
+        }
+
+        .verb-card-irregular .verb-card-header {
+            background-color: #e0e7ff;
+            color: #4338ca;
+        }
+
+        .verb-card-body {
+            padding: 12px;
+            text-align: center;
+        }
+
+        .verb-card-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .verb-card-meaning {
+            font-size: 12px;
+            color: var(--gray-600);
+            margin-bottom: 8px;
+        }
+
+        .verb-card-actions {
+            margin-top: 8px;
+        }
+
+        .verb-card-button {
+            width: 100%;
+            padding: 6px 0;
+            border-radius: var(--radius-md);
+            font-size: 12px;
+            font-weight: 500;
+            background-color: var(--primary-light);
+            color: var(--primary);
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .verb-card-button:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .verb-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .verb-modal-content {
+            background-color: white;
+            border-radius: var(--radius-2xl);
+            padding: 24px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .verb-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .verb-modal-title {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .verb-modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--gray-500);
+        }
+
+        /* Stats Tab */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background-color: white;
+            border-radius: var(--radius-xl);
+            padding: 16px;
+            box-shadow: var(--shadow-sm);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--gray-600);
+        }
+
+        .progress-chart {
+            background-color: white;
+            border-radius: var(--radius-xl);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .chart-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        .chart-container {
+            height: 200px;
+            position: relative;
+        }
+
+        .month-completion {
+            display: flex;
+            background-color: var(--gray-100);
+            border-radius: var(--radius-lg);
+            height: 24px;
+            margin-bottom: 8px;
+            overflow: hidden;
+        }
+
+        .month-completion-fill {
+            background-color: var(--primary);
+            height: 100%;
+        }
+
+        .month-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--gray-600);
+            margin-bottom: 16px;
+        }
+
+        .streak-container {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .streak-value {
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .streak-label {
+            font-size: 16px;
+            color: var(--gray-600);
+        }
+
+        .achievements-container {
+            margin-top: 24px;
+        }
+
+        .achievements-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--gray-800);
+        }
+
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .achievement-card {
+            background-color: white;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 1px solid var(--gray-200);
+            text-align: center;
+        }
+
+        .achievement-icon {
+            padding: 16px 0;
+            font-size: 32px;
+        }
+
+        .achievement-locked .achievement-icon {
+            filter: grayscale(1);
+            opacity: 0.5;
+        }
+
+        .achievement-title {
+            padding: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            background-color: var(--gray-100);
+        }
+
+        .achievement-locked .achievement-title {
+            color: var(--gray-500);
+        }
+
+        /* Utilities */
+        .hidden {
+            display: none !important;
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .justify-between {
+            justify-content: space-between;
+        }
+
+        .items-center {
+            align-items: center;
+        }
+
+        .gap-2 {
+            gap: 8px;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mb-4 {
+            margin-bottom: 16px;
+        }
+
+        .mb-6 {
+            margin-bottom: 24px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 500px) {
+            .app-container {
+                padding: 12px;
+            }
+
+            .app-header {
+                padding: 12px;
+            }
+
+            .app-title {
+                font-size: 20px;
+            }
+
+            .card {
+                padding: 16px;
+            }
+
+            .conjugation-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .achievements-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header Section -->
+        <header class="app-header">
+            <div class="header-content">
+                <h1 class="app-title">Portuguese Daily Verb Master</h1>
+                <div class="progress-indicator">
+                    Day <span id="current-day-display">1</span> of 180
+                </div>
+            </div>
+            <div class="nav-tabs">
+                <div class="nav-tab active" data-tab="learn">Learn</div>
+                <div class="nav-tab" data-tab="practice">Practice</div>
+                <div class="nav-tab" data-tab="review">Review</div>
+                <div class="nav-tab" data-tab="stats">Stats</div>
+            </div>
+        </header>
+
+        <!-- Calendar Section -->
+        <div class="card calendar-container">
+            <div class="month-header">
+                <h2 class="month-title" id="current-month">January 2025</h2>
+                <div class="month-nav">
+                    <button class="month-nav-button" id="prev-month">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
+                        Prev
+                    </button>
+                    <button class="month-nav-button" id="next-month">
+                        Next
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="calendar-grid" id="calendar-weekdays">
+                <div class="calendar-day-header">S</div>
+                <div class="calendar-day-header">M</div>
+                <div class="calendar-day-header">T</div>
+                <div class="calendar-day-header">W</div>
+                <div class="calendar-day-header">T</div>
+                <div class="calendar-day-header">F</div>
+                <div class="calendar-day-header">S</div>
+            </div>
+            <div class="calendar-grid" id="calendar-days">
+                <!-- Calendar days will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Content Tabs -->
+        <main>
+            <!-- Learn Tab -->
+            <section id="learn-tab" class="tab-content">
+                <div class="card">
+                    <div class="verb-header">
+                        <div>
+                            <h2 class="verb-title" id="current-verb-name">ser</h2>
+                            <p class="verb-info" id="current-verb-meaning">to be (permanent)</p>
+                        </div>
+                        <div class="verb-type-badge verb-type-irregular" id="verb-type-badge">Irregular</div>
+                    </div>
+
+                    <div class="conjugation-grid">
+                        <div class="conjugation-table present-tense">
+                            <div class="conjugation-header">Present (Presente)</div>
+                            <div class="conjugation-body" id="present-conjugations">
+                                <!-- Populated by JavaScript -->
+                            </div>
+                        </div>
+                        <div class="conjugation-table past-tense">
+                            <div class="conjugation-header">Past (Pretérito Perfeito)</div>
+                            <div class="conjugation-body" id="past-conjugations">
+                                <!-- Populated by JavaScript -->
+                            </div>
+                        </div>
+                        <div class="conjugation-table future-tense">
+                            <div class="conjugation-header">Future (Futuro)</div>
+                            <div class="conjugation-body" id="future-conjugations">
+                                <!-- Populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="examples-container">
+                        <h3 class="examples-title">Example Sentences</h3>
+                        <div id="example-sentences">
+                            <!-- Populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <div class="mt-4 text-center">
+                        <button class="button primary-button" id="start-practice-button">
+                            Practice This Verb
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Today's Learning Path</h2>
+                    </div>
+                    <div class="card-subtitle" id="daily-focus">Focus: Essential verbs for introductions and everyday situations</div>
+
+                    <div id="daily-review-verbs">
+                        <p class="mb-4">Also reviewing these previous verbs:</p>
+                        <div class="verb-list" id="review-verb-list">
+                            <!-- Populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Practice Tab -->
+            <section id="practice-tab" class="tab-content hidden">
+                <div class="card practice-card">
+                    <div class="card-header">
+                        <h2 class="card-title">Daily Practice</h2>
+                        <div id="practice-score">0/10</div>
+                    </div>
+
+                    <div class="progress-container">
+                        <div class="progress-bar" id="practice-progress" style="width: 0%;"></div>
+                    </div>
+
+                    <div id="question-container">
+                        <div class="question-count">Question <span id="current-question">1</span> of <span id="total-questions">10</span></div>
+                        <div class="question-prompt" id="question-text">Eu ___ professor. (ser - present)</div>
+
+                        <input type="text" id="answer-input" class="answer-input" placeholder="Type your answer here..." autocomplete="off">
+
+                        <div id="feedback-container" class="hidden"></div>
+
+                        <div class="action-buttons">
+                            <button id="check-answer" class="button primary-button" disabled>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
